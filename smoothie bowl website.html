@@ -130,8 +130,8 @@
   nav.site-nav.scrolled {
     background: rgba(13, 10, 30, 0.65);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    backdrop-filter: blur(12px) saturate(160%);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
     padding: 12px 48px;
   }
@@ -155,8 +155,8 @@
     align-items: center;
     gap: 6px;
     background: rgba(255,255,255,0.04);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 50px;
     padding: 6px 8px;
@@ -190,8 +190,8 @@
     width: 42px; height: 42px;
     border-radius: 50%;
     background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(255,255,255,0.12);
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
@@ -217,8 +217,8 @@
     background: rgba(8, 11, 22, 0.92);
     border: 1px solid rgba(255,255,255,0.12);
     box-shadow: 0 18px 40px rgba(0,0,0,0.35);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     opacity: 0;
     transform: translateY(-8px);
     pointer-events: none;
@@ -325,12 +325,13 @@
     color: var(--white);
     text-align: center;
     position: absolute;
-    top: 46%;
+    /* Move title to upper third to create breathing room */
+    top: 28%;
     left: 50%;
     width: min(100vw - 32px, 100%);
     transform: translate(-50%, -50%);
     white-space: nowrap;
-    z-index: 5;
+    z-index: 6;
     letter-spacing: 0.02em;
     opacity: 0.08;
     pointer-events: none;
@@ -340,11 +341,13 @@
   /* BOWL CONTAINER */
   .bowl-wrap {
     position: absolute;
-    top: 58%;
+    /* Center the bowl more strongly so it remains fully visible */
+    top: 54%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -52%);
     width: clamp(280px, 37vw, 550px);
-    z-index: 3;
+    z-index: 8; /* ensure bowl remains above title and ingredients */
+    will-change: transform, opacity;
   }
 
   /* INGREDIENTS */
@@ -488,26 +491,27 @@
   .slide.active .ing-3 { opacity: 1; transform: rotate(-12deg) translateY(0); }
   .slide.active .title-anim   { transition-delay: 0s; }
   .slide.active .content-anim { transition-delay: 0.04s; }
-  .slide.active .bowl-anim    { transition-delay: 0.07s; }
-  .slide.active .ing-1        { transition-delay: 0.3s; }
-  .slide.active .ing-2        { transition-delay: 0.38s; }
-  .slide.active .ing-3        { transition-delay: 0.46s; }
+  /* Make bowl appear slightly after title to avoid overlap */
+  .slide.active .bowl-anim    { transition-delay: 0.18s; }
+  .slide.active .ing-1        { transition-delay: 0.28s; }
+  .slide.active .ing-2        { transition-delay: 0.34s; }
+  .slide.active .ing-3        { transition-delay: 0.4s; }
 
   /* ENTER RIGHT */
-  .slide.enter-right .title-anim   { opacity: 0; transform: translate(65vw, -50%); }
-  .slide.enter-right .bowl-anim    { opacity: 0; transform: translateX(72vw) rotate(35deg); }
-  .slide.enter-right .content-anim { opacity: 0; transform: translateX(55vw); }
-  .slide.enter-right .ing-1 { opacity: 0; transform: rotate(-20deg) translateY(-90vh); }
-  .slide.enter-right .ing-2 { opacity: 0; transform: rotate(15deg)  translateY(-90vh); }
-  .slide.enter-right .ing-3 { opacity: 0; transform: rotate(-12deg) translateY(-90vh); }
+  .slide.enter-right .title-anim   { opacity: 0; transform: translate(28vw, -45%); }
+  .slide.enter-right .bowl-anim    { opacity: 0; transform: translateX(18vw) rotate(12deg) translateY(8vh); }
+  .slide.enter-right .content-anim { opacity: 0; transform: translateX(24vw); }
+  .slide.enter-right .ing-1 { opacity: 0; transform: rotate(-20deg) translateY(-18vh); }
+  .slide.enter-right .ing-2 { opacity: 0; transform: rotate(15deg)  translateY(-16vh); }
+  .slide.enter-right .ing-3 { opacity: 0; transform: rotate(-12deg) translateY(-14vh); }
 
   /* ENTER LEFT */
-  .slide.enter-left .title-anim   { opacity: 0; transform: translate(-65vw, -50%); }
-  .slide.enter-left .bowl-anim    { opacity: 0; transform: translateX(-72vw) rotate(-35deg); }
-  .slide.enter-left .content-anim { opacity: 0; transform: translateX(-55vw); }
-  .slide.enter-left .ing-1 { opacity: 0; transform: rotate(-20deg) translateY(-90vh); }
-  .slide.enter-left .ing-2 { opacity: 0; transform: rotate(15deg)  translateY(-90vh); }
-  .slide.enter-left .ing-3 { opacity: 0; transform: rotate(-12deg) translateY(-90vh); }
+  .slide.enter-left .title-anim   { opacity: 0; transform: translate(-28vw, -45%); }
+  .slide.enter-left .bowl-anim    { opacity: 0; transform: translateX(-18vw) rotate(-12deg) translateY(8vh); }
+  .slide.enter-left .content-anim { opacity: 0; transform: translateX(-24vw); }
+  .slide.enter-left .ing-1 { opacity: 0; transform: rotate(-20deg) translateY(-18vh); }
+  .slide.enter-left .ing-2 { opacity: 0; transform: rotate(15deg)  translateY(-16vh); }
+  .slide.enter-left .ing-3 { opacity: 0; transform: rotate(-12deg) translateY(-14vh); }
 
   /* EXIT LEFT */
   .slide.exit-left .title-anim,
@@ -518,12 +522,12 @@
   .slide.exit-left .ingredient.anim {
     transition: transform 0.42s var(--snap), opacity 0.32s ease-in;
   }
-  .slide.exit-left .title-anim   { opacity: 0; transform: translate(-55vw, -50%); }
-  .slide.exit-left .bowl-anim    { opacity: 0; transform: translateX(-60vw) rotate(-30deg); }
-  .slide.exit-left .content-anim { opacity: 0; transform: translateX(-45vw); }
-  .slide.exit-left .ing-1 { opacity: 0; transform: rotate(-20deg) translateY(-110vh); }
-  .slide.exit-left .ing-2 { opacity: 0; transform: rotate(15deg)  translateY(-110vh); }
-  .slide.exit-left .ing-3 { opacity: 0; transform: rotate(-12deg) translateY(-110vh); }
+  .slide.exit-left .title-anim   { opacity: 0; transform: translate(-28vw, -45%); }
+  .slide.exit-left .bowl-anim    { opacity: 0; transform: translateX(-18vw) rotate(-12deg) translateY(12vh); }
+  .slide.exit-left .content-anim { opacity: 0; transform: translateX(-24vw); }
+  .slide.exit-left .ing-1 { opacity: 0; transform: rotate(-20deg) translateY(-30vh); }
+  .slide.exit-left .ing-2 { opacity: 0; transform: rotate(15deg)  translateY(-30vh); }
+  .slide.exit-left .ing-3 { opacity: 0; transform: rotate(-12deg) translateY(-30vh); }
 
   /* EXIT RIGHT */
   .slide.exit-right .title-anim,
@@ -534,12 +538,12 @@
   .slide.exit-right .ingredient.anim {
     transition: transform 0.42s var(--snap), opacity 0.32s ease-in;
   }
-  .slide.exit-right .title-anim   { opacity: 0; transform: translate(55vw, -50%); }
-  .slide.exit-right .bowl-anim    { opacity: 0; transform: translateX(60vw) rotate(30deg); }
-  .slide.exit-right .content-anim { opacity: 0; transform: translateX(45vw); }
-  .slide.exit-right .ing-1 { opacity: 0; transform: rotate(-20deg) translateY(-110vh); }
-  .slide.exit-right .ing-2 { opacity: 0; transform: rotate(15deg)  translateY(-110vh); }
-  .slide.exit-right .ing-3 { opacity: 0; transform: rotate(-12deg) translateY(-110vh); }
+  .slide.exit-right .title-anim   { opacity: 0; transform: translate(28vw, -45%); }
+  .slide.exit-right .bowl-anim    { opacity: 0; transform: translateX(18vw) rotate(12deg) translateY(12vh); }
+  .slide.exit-right .content-anim { opacity: 0; transform: translateX(24vw); }
+  .slide.exit-right .ing-1 { opacity: 0; transform: rotate(-20deg) translateY(-30vh); }
+  .slide.exit-right .ing-2 { opacity: 0; transform: rotate(15deg)  translateY(-30vh); }
+  .slide.exit-right .ing-3 { opacity: 0; transform: rotate(-12deg) translateY(-30vh); }
 
   .slide:not(.active):not(.enter-right):not(.enter-left):not(.exit-left):not(.exit-right) .anim {
     opacity: 0 !important;
@@ -554,11 +558,11 @@
   /* Generic bowl structure */
   .bowl-svg {
     width: 100%;
-    filter: drop-shadow(0 30px 60px rgba(0,0,0,0.5));
+    filter: drop-shadow(0 18px 36px rgba(0,0,0,0.45));
   }
   .ing-svg {
     width: 100%;
-    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.4));
+    filter: drop-shadow(0 6px 14px rgba(0,0,0,0.36));
   }
 
   /* ═══════════════════════════════════════
@@ -756,7 +760,7 @@
   }
   .card-bowl-img {
     width: 100%;
-    filter: drop-shadow(0 16px 40px rgba(0,0,0,0.5));
+    filter: drop-shadow(0 12px 28px rgba(0,0,0,0.48));
     transition: transform 0.5s var(--spring);
   }
 
@@ -1201,7 +1205,7 @@
       radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 30%), rgba(122,255,140,0.14), transparent 22%),
       radial-gradient(circle at 78% 22%, rgba(255,107,129,0.12), transparent 24%),
       radial-gradient(circle at 18% 78%, rgba(120,145,255,0.16), transparent 28%);
-    filter: blur(14px);
+    filter: blur(8px);
     opacity: 0.55;
     transform: translate3d(0,0,0);
     animation: premiumAmbient 18s ease-in-out infinite alternate;
@@ -1464,7 +1468,7 @@
   .slide.active .slide-title { animation: cinematicTitleIn 1.2s var(--spring) both; }
   .slide.active .bowl-wrap { animation: premiumFloat 6s ease-in-out infinite; }
   @keyframes cinematicTitleIn {
-    from { opacity: 0; filter: blur(20px); letter-spacing: 0.08em; }
+    from { opacity: 0; filter: blur(10px); letter-spacing: 0.08em; }
     to { opacity: 1; filter: blur(0); letter-spacing: 0.02em; }
   }
   @keyframes premiumFloat {
@@ -1485,7 +1489,7 @@
     transform: translateY(26px) rotateX(18deg);
     transform-origin: 50% 100%;
     transition: opacity 0.75s var(--ease-out), transform 0.75s var(--spring), filter 0.75s ease;
-    filter: blur(8px);
+    filter: blur(4px);
   }
   .visible .word-reveal,
   .text-ready.visible .word-reveal {
@@ -1497,7 +1501,7 @@
   .reveal {
     opacity: 0;
     transform: translate3d(0, 34px, 0) scale(0.98);
-    filter: blur(10px);
+    filter: blur(5px);
     transition: opacity 0.95s var(--ease-out), transform 0.95s var(--spring), filter 0.95s ease;
   }
   .reveal.visible {
@@ -2430,9 +2434,7 @@
 </div>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-<script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
+
 
 <script>
   // ═══════════════════════════════════════
@@ -2668,7 +2670,12 @@
   }
 
   function updateCounter(index) {
-    counter.textContent = String(index + 1).padStart(2, '0') + ' / 0' + slides.length;
+    // Use formatted slide numbers for consistency
+    counter.textContent = formatSlideNumber(index + 1) + ' / ' + formatSlideNumber(slides.length);
+  }
+
+  function formatSlideNumber(num) {
+    return String(num).padStart(2, '0');
   }
 
   // ═══════════════════════════════════════
@@ -2703,80 +2710,89 @@
     const nextContent = nextSlide.querySelector('.slide-content');
     const nextIngredients = nextSlide.querySelectorAll('.ingredient');
 
-    const moveDist = direction === 'next' ? 200 : -200;
-    const titleDist = direction === 'next' ? 400 : -400;
+    const moveDist = direction === 'next' ? 120 : -120;
+    const titleDist = direction === 'next' ? 220 : -220;
 
-    // Out animation for current slide
+    // Out animation for current slide — animate title first so it vacates upper area
     tl.to(currTitle, {
       x: -titleDist,
+      y: '-=8vh',
       opacity: 0,
-      filter: "blur(20px)",
-      duration: 0.6,
+      filter: "blur(8px)",
+      duration: 0.32,
       ease: "power2.in"
     }, 0);
-    
-    tl.to(currBowl, {
-      x: -moveDist * 1.5,
-      rotation: direction === 'next' ? -20 : 20,
-      opacity: 0,
-      scale: 0.8,
-      duration: 0.7,
-      ease: "power2.inOut"
-    }, 0);
 
+    // then fade content
     tl.to(currContent, {
-      x: -moveDist,
+      x: -moveDist * 0.9,
       opacity: 0,
-      duration: 0.5,
+      duration: 0.32,
       ease: "power2.in"
-    }, 0);
+    }, 0.02);
 
+    // move ingredients subtly upward and out
     tl.to(currIngredients, {
-      y: -150,
+      y: -30,
       opacity: 0,
-      stagger: 0.05,
-      duration: 0.5,
+      stagger: 0.02,
+      duration: 0.28,
       ease: "power2.in"
-    }, 0);
+    }, 0.01);
 
-    // Reset next slide elements before showing
-    gsap.set(nextTitle, { x: titleDist, opacity: 0, filter: "blur(20px)" });
-    gsap.set(nextBowl, { x: moveDist * 1.5, rotation: direction === 'next' ? 20 : -20, opacity: 0, scale: 0.8 });
-    gsap.set(nextContent, { x: moveDist, opacity: 0 });
-    gsap.set(nextIngredients, { y: 150, opacity: 0 });
+    // finally move bowl out of lower area with smaller horizontal travel and slight downward tuck
+    tl.to(currBowl, {
+      x: -moveDist * 0.8,
+      y: '+=6vh',
+      rotation: direction === 'next' ? -10 : 10,
+      opacity: 0,
+      scale: 0.9,
+      duration: 0.45,
+      ease: "power2.inOut"
+    }, 0.05);
 
-    // In animation for next slide
+    // Reset next slide elements before showing — keep title starting higher and bowl lower
+    gsap.set(nextTitle, { x: titleDist, y: '-=6vh', opacity: 0, filter: "blur(8px)" });
+    gsap.set(nextBowl, { x: moveDist * 0.8, y: '+=6vh', rotation: direction === 'next' ? 10 : -10, opacity: 0, scale: 0.92 });
+    gsap.set(nextContent, { x: moveDist * 0.9, opacity: 0 });
+    gsap.set(nextIngredients, { y: 30, opacity: 0 });
+
+    // In animation for next slide — title appears first in upper third
     tl.to(nextTitle, {
       x: 0,
+      y: '+=6vh',
       opacity: 0.08,
       filter: "blur(0px)",
-      duration: 0.8,
+      duration: 0.42,
       ease: "power3.out"
-    }, 0.2);
+    }, 0.08);
 
-    tl.to(nextBowl, {
-      x: 0,
-      rotation: 0,
-      opacity: 1,
-      scale: 1,
-      duration: 0.9,
-      ease: "power3.out"
-    }, 0.25);
-
+    // content and ingredients follow
     tl.to(nextContent, {
       x: 0,
       opacity: 1,
-      duration: 0.7,
+      duration: 0.35,
       ease: "power3.out"
-    }, 0.3);
+    }, 0.16);
 
     tl.to(nextIngredients, {
       y: 0,
       opacity: 1,
-      stagger: 0.08,
-      duration: 0.8,
+      stagger: 0.03,
+      duration: 0.38,
       ease: "power3.out"
-    }, 0.35);
+    }, 0.18);
+
+    // bowl enters last to ensure it occupies the lower visual area without crossing title space
+    tl.to(nextBowl, {
+      x: 0,
+      y: 0,
+      rotation: 0,
+      opacity: 1,
+      scale: 1.03,
+      duration: 0.45,
+      ease: "power3.out"
+    }, 0.24);
 
     setBackground(next);
     updateCounter(next);
@@ -2862,23 +2878,23 @@
       const ingredients = active.querySelectorAll('.ingredient');
 
       gsap.fromTo(title, 
-        { opacity: 0, scale: 0.9, filter: "blur(15px)" },
-        { opacity: 0.08, scale: 1, filter: "blur(0)", duration: 1.2, ease: "power3.out" }
+        { opacity: 0, scale: 0.96, filter: "blur(7px)" },
+        { opacity: 0.08, scale: 1, filter: "blur(0)", duration: 1.0, ease: "power3.out" }
       );
 
       gsap.fromTo(bowl, 
-        { opacity: 0, scale: 0.75, y: -180 },
-        { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "power3.out", delay: 0.05 }
+        { opacity: 0, scale: 0.82, y: -80 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.55, ease: "power3.out", delay: 0.05 }
       );
 
       gsap.fromTo(content, 
-        { opacity: 0, x: -50 },
-        { opacity: 1, x: 0, duration: 0.5, ease: "power3.out", delay: 0.15 }
+        { opacity: 0, x: -36 },
+        { opacity: 1, x: 0, duration: 0.5, ease: "power3.out", delay: 0.12 }
       );
 
       gsap.fromTo(ingredients, 
-        { opacity: 0, y: 60 },
-        { opacity: 1, y: 0, stagger: 0.06, duration: 0.5, ease: "power3.out", delay: 0.2 }
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, stagger: 0.04, duration: 0.48, ease: "power3.out", delay: 0.18 }
       );
 
       gsap.fromTo('.scroll-hint', 
@@ -3258,10 +3274,6 @@
 
       // Connect to ScrollTrigger
       lenis.on('scroll', ScrollTrigger.update);
-      
-      gsap.ticker.add((time) => {
-        lenis.raf(time * 1000);
-      });
       gsap.ticker.lagSmoothing(0);
 
       // Handle custom smooth anchor navigation
@@ -3286,7 +3298,7 @@
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
       let particles = [];
-      const particleCount = 35;
+      const particleCount = 18;
 
       function resize() {
         canvas.width = window.innerWidth;
