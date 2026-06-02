@@ -3454,6 +3454,38 @@
       }, { passive: true });
     }
 
+    function initProfileMenu() {
+      const wrap = document.getElementById('profileMenuWrap');
+      const btn = document.getElementById('profileBtn');
+      if (!wrap || !btn) return;
+
+      function closeMenu() {
+        wrap.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+
+      function openMenu() {
+        wrap.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (wrap.classList.contains('open')) closeMenu(); else openMenu();
+      });
+
+      // Close when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!wrap.classList.contains('open')) return;
+        if (!wrap.contains(e.target)) closeMenu();
+      });
+
+      // Close on Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeMenu();
+      });
+    }
+
     initLoader();
     initCursor();
     initNavIndicator();
@@ -3465,6 +3497,7 @@
     initSmoothScroll();
     initCanvasParticles();
     initNavbarScrollShrink();
+    initProfileMenu();
   })();
 </script>
 </body>
