@@ -333,7 +333,7 @@
     white-space: nowrap;
     z-index: 6;
     letter-spacing: 0.02em;
-    opacity: 0.08;
+    opacity: 1;
     pointer-events: none;
     user-select: none;
   }
@@ -431,7 +431,7 @@
       white-space: normal;
       font-size: clamp(40px, 10.5vw, 120px);
       transform: translate(-50%, -50%);
-      opacity: 0.12;
+      opacity: 1;
     }
 
     .bowl-wrap {
@@ -561,8 +561,7 @@
      ANIMATION STATES
   ═══════════════════════════════════════ */
   .anim {
-    opacity: 0;
-    transition: transform 0.6s var(--spring), opacity 0.45s ease;
+    opacity: 0; /* Removed CSS transition to prevent GSAP conflict */
   }
   .ingredient.anim {
     transition: transform 0.5s var(--gravity), opacity 0.45s ease;
@@ -1280,7 +1279,301 @@
     margin-right: 6px;
     vertical-align: -2px;
   }
+/* ═══════════════════════════════════════
+   QUICK VIEW MODAL
+═══════════════════════════════════════ */
+.qv-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 310;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.32s var(--ease-out);
+}
+.qv-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
 
+.qv-modal {
+  position: relative;
+  background: linear-gradient(145deg, rgba(16, 12, 36, 0.97) 0%, rgba(10, 8, 24, 0.99) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 28px;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow:
+    0 32px 80px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    0 1px 0 rgba(255, 255, 255, 0.08) inset;
+  width: min(900px, 92vw);
+  max-height: 88vh;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  transform: translateY(24px) scale(0.97);
+  transition: transform 0.42s var(--spring), opacity 0.32s var(--ease-out);
+  opacity: 0;
+}
+.qv-overlay.active .qv-modal {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* Left panel — image */
+.qv-image-panel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 32px;
+  overflow: hidden;
+  min-height: 460px;
+}
+.qv-image-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--qv-panel-bg, radial-gradient(ellipse at 50% 110%, #7078A6 0%, #1c1840 100%));
+  opacity: 0.85;
+}
+.qv-image-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 60%, rgba(255,255,255,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.qv-bowl-svg {
+  position: relative;
+  z-index: 1;
+  width: min(260px, 80%);
+  filter: drop-shadow(0 20px 48px rgba(0, 0, 0, 0.55));
+  animation: qvBowlFloat 5s ease-in-out infinite;
+}
+@keyframes qvBowlFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+/* Rating stars */
+.qv-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.qv-star {
+  color: #FFD060;
+  font-size: 15px;
+  line-height: 1;
+}
+.qv-star.empty { color: rgba(255, 255, 255, 0.18); }
+.qv-rating-count {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  margin-left: 6px;
+}
+
+/* Right panel — info */
+.qv-info-panel {
+  padding: 40px 40px 36px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.qv-info-panel::-webkit-scrollbar { width: 4px; }
+.qv-info-panel::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+}
+
+.qv-meta-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.qv-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  margin-bottom: 4px;
+}
+.qv-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(34px, 4vw, 46px);
+  letter-spacing: 0.03em;
+  line-height: 1;
+  color: var(--white);
+}
+.qv-flavour {
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+.qv-price {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 38px;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  white-space: nowrap;
+}
+
+.qv-desc {
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.62);
+  line-height: 1.75;
+}
+
+/* Section divider */
+.qv-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Ingredients */
+.qv-section-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  margin-bottom: 10px;
+}
+.qv-ingredients {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.qv-ingredient-tag {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
+  padding: 5px 13px;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.02em;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.qv-ingredient-tag:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Nutrition facts */
+.qv-nutrition {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 16px 18px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.qv-nut-item {
+  text-align: center;
+}
+.qv-nut-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 3px;
+}
+.qv-nut-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* CTA row */
+.qv-cta-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+.qv-add-btn {
+  flex: 1;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #7aff8c 0%, #5ACC6A 100%);
+  border: none;
+  border-radius: 14px;
+  color: #0d0a1e;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.35s var(--spring);
+  box-shadow: 0 8px 24px rgba(122, 255, 140, 0.28);
+}
+.qv-add-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(122, 255, 140, 0.42);
+}
+.qv-add-btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Close button */
+.qv-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 19px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  line-height: 1;
+}
+.qv-close:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--white);
+  transform: scale(1.08);
+}
+
+/* Responsive */
+@media (max-width: 680px) {
+  .qv-modal {
+    grid-template-columns: 1fr;
+    width: 96vw;
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+  .qv-image-panel { min-height: 240px; padding: 32px 24px; }
+  .qv-info-panel  { padding: 28px 24px 28px; }
+  .qv-nutrition   { grid-template-columns: repeat(4, 1fr); }
+}
   /* PREMIUM EXPERIENCE LAYER */
   html { scroll-padding-top: 96px; }
   body { cursor: auto; }
@@ -1555,7 +1848,7 @@
     will-change: transform, opacity, filter;
     transform-style: preserve-3d;
   }
-  .slide.active .slide-title { animation: cinematicTitleIn 1.2s var(--spring) both; }
+  /* Removed CSS animation to allow GSAP goTo function full control */
   .slide.active .bowl-wrap { animation: premiumFloat 6s ease-in-out infinite; }
   @keyframes cinematicTitleIn {
     from { opacity: 0; filter: blur(10px); letter-spacing: 0.08em; }
@@ -1567,7 +1860,7 @@
   }
   .slide.exit-left .anim,
   .slide.exit-right .anim { filter: blur(8px); }
-  .slide.exit-left .slide-title,
+  .slide.exit-left .slide-title, 
   .slide.exit-right .slide-title {
     opacity: 0 !important;
     visibility: hidden;
@@ -1578,7 +1871,6 @@
     opacity: 0;
     transform: translateY(26px) rotateX(18deg);
     transform-origin: 50% 100%;
-    transition: opacity 0.75s var(--ease-out), transform 0.75s var(--spring), filter 0.75s ease;
     filter: blur(4px);
   }
   .visible .word-reveal,
@@ -1592,7 +1884,6 @@
     opacity: 0;
     transform: translate3d(0, 34px, 0) scale(0.98);
     filter: blur(5px);
-    transition: opacity 0.95s var(--ease-out), transform 0.95s var(--spring), filter 0.95s ease;
   }
   .reveal.visible {
     opacity: 1;
@@ -1705,6 +1996,7 @@
     <a href="#" class="active" data-section="hero">Home</a>
     <a href="#about" data-section="about">About</a>
     <a href="#shop" data-section="shop">Shop</a>
+    <a href="#reviews" data-section="reviews">Reviews</a>
     <a href="#plans" data-section="plans">Plans</a>
     <a href="#contact" data-section="contact">Contact</a>
   </div>
@@ -2347,6 +2639,64 @@
   </div>
 </section>
 
+<!-- REVIEWS -->
+<section class="menu" id="reviews" style="background: var(--bg); padding-top: 60px;">
+  <div class="shop-header">
+    <div class="shop-title reveal">KIND WORDS</div>
+    <div class="shop-sub reveal reveal-d1">Don't just take our word for it. Join the community of fruit lovers.</div>
+  </div>
+  <div class="shop-grid">
+    <!-- Review 1 -->
+    <div class="review-card reveal">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-quote">"The Berry Pure bowl is unlike anything I've had. You can actually taste the quality of the fresh fruit. It's my daily morning ritual now."</div>
+      <div class="review-author">
+        <div class="author-avatar">AR</div>
+        <div class="author-info">
+          <span class="name">Aarav Raj</span>
+          <span class="status">Verified Buyer</span>
+        </div>
+      </div>
+    </div>
+    <!-- Review 2 -->
+    <div class="review-card reveal reveal-d1">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-quote">"Subscription was the best decision. The Pink Bliss always arrives perfectly chilled. The raw honey drizzle is the perfect touch."</div>
+      <div class="review-author">
+        <div class="author-avatar">SM</div>
+        <div class="author-info">
+          <span class="name">Sanya Malhotra</span>
+          <span class="status">Gold Member</span>
+        </div>
+      </div>
+    </div>
+    <!-- Review 3 -->
+    <div class="review-card reveal reveal-d2">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-quote">"As a fitness enthusiast, finding a clean dessert alternative is hard. Cocoa Crush hits that chocolate craving without the guilt. 10/10."</div>
+      <div class="review-author">
+        <div class="author-avatar">VK</div>
+        <div class="author-info">
+          <span class="name">Vikram Khanna</span>
+          <span class="status">Verified Buyer</span>
+        </div>
+      </div>
+    </div>
+    <!-- Review 4 -->
+    <div class="review-card reveal reveal-d3">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-quote">"The family plan is incredible value. My kids actually look forward to 'smoothie mornings'. The Dark Berry is a hidden gem!"</div>
+      <div class="review-author">
+        <div class="author-avatar">PL</div>
+        <div class="author-info">
+          <span class="name">Priya Lakhani</span>
+          <span class="status">Family Plan User</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- WELLNESS PLANS -->
 <section class="menu" id="plans" style="background: var(--bg);">
   <div class="shop-header">
@@ -2371,7 +2721,7 @@
         </ul>
       </div>
       <div class="card-bottom">
-        <div class="card-price">₹299<span class="price-period">/wk</span></div>
+        <div class="card-price">₹799<span class="price-period">/wk</span></div>
         <button class="card-btn plan-btn" data-plan="individual">Subscribe</button>
       </div>
     </div>
@@ -2454,9 +2804,11 @@
       <a href="#">Home</a>
       <a href="#about">About</a>
       <a href="#shop">Shop</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#plans">Plans</a>
       <a href="#contact">Contact</a>
     </div>
-      <div class="contact-grid">
+    <div class="contact-grid">
       <a class="contact-card" href="tel:+919876543210"><strong>Call</strong> +91 98765 43210</a>
       <a class="contact-card" href="mailto:hello@freshify.com"><strong>Email</strong> hello@freshify.com</a>
       <div class="contact-card"><strong>Visit</strong> India, Pune</div>
@@ -2524,7 +2876,55 @@
 </div>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<!-- QUICK VIEW MODAL -->
+<div class="qv-overlay" id="qvOverlay" role="dialog" aria-modal="true" aria-label="Product Quick View">
+  <div class="qv-modal" id="qvModal">
 
+    <!-- Close -->
+    <button class="qv-close" id="qvClose" aria-label="Close quick view">×</button>
+
+    <!-- Left: image -->
+    <div class="qv-image-panel" id="qvImagePanel">
+      <div id="qvBowlSvg" class="qv-bowl-svg"></div>
+    </div>
+
+    <!-- Right: info -->
+    <div class="qv-info-panel">
+
+      <div>
+        <div class="qv-label">Smoothie Bowl</div>
+        <div class="qv-meta-row">
+          <div>
+            <div class="qv-name" id="qvName">–</div>
+            <div class="qv-flavour" id="qvFlavour">–</div>
+          </div>
+          <div class="qv-price" id="qvPrice">–</div>
+        </div>
+      </div>
+
+      <div class="qv-rating" id="qvRating"></div>
+
+      <p class="qv-desc" id="qvDesc">–</p>
+
+      <div class="qv-divider"></div>
+
+      <div>
+        <div class="qv-section-title">Ingredients</div>
+        <div class="qv-ingredients" id="qvIngredients"></div>
+      </div>
+
+      <div>
+        <div class="qv-section-title">Nutrition per serving</div>
+        <div class="qv-nutrition" id="qvNutrition"></div>
+      </div>
+
+      <div class="qv-cta-row">
+        <button class="qv-add-btn" id="qvAddToCart">Add to Cart</button>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <script>
   // ═══════════════════════════════════════
@@ -2851,7 +3251,7 @@
     tl.to(nextTitle, {
       x: 0,
       y: '+=6vh',
-      opacity: 0.08,
+      opacity: 1,
       filter: "blur(0px)",
       duration: 0.42,
       ease: "power3.out"
@@ -2911,6 +3311,7 @@
     { id: 'hero',  el: document.getElementById('hero') },
     { id: 'about', el: document.getElementById('about') },
     { id: 'shop',  el: document.getElementById('shop') },
+    { id: 'reviews', el: document.getElementById('reviews') },
     { id: 'plans', el: document.getElementById('plans') },
     { id: 'contact', el: document.getElementById('contact') },
   ];
@@ -2969,7 +3370,7 @@
 
       gsap.fromTo(title, 
         { opacity: 0, scale: 0.96, filter: "blur(7px)" },
-        { opacity: 0.08, scale: 1, filter: "blur(0)", duration: 1.0, ease: "power3.out" }
+        { opacity: 1, scale: 1, filter: "blur(0)", duration: 1.0, ease: "power3.out" }
       );
 
       gsap.fromTo(bowl, 
@@ -3132,6 +3533,7 @@
         
         gsap.to(target.querySelectorAll('.word-reveal-inner'), {
           y: '0%',
+          filter: "blur(0px)",
           duration: 0.8,
           ease: "power3.out",
           stagger: 0.05,
@@ -3149,7 +3551,7 @@
       gsap.registerPlugin(ScrollTrigger);
 
       // Grid items staggered reveal
-      const sections = ['#about', '#shop', '#plans', '#contact'];
+      const sections = ['#about', '#shop', '#reviews', '#plans', '#contact'];
       sections.forEach(secId => {
         const sec = document.querySelector(secId);
         if (!sec) return;
@@ -3499,6 +3901,156 @@
     initNavbarScrollShrink();
     initProfileMenu();
   })();
+</script>
+<script>
+  // ═══════════════════════════════════════
+  //  QUICK VIEW MODAL
+  // ═══════════════════════════════════════
+
+  // Extended product data — preserves existing { id, name, flavour, price }
+  // and adds description, rating, ingredients, and nutrition.
+  const quickViewData = {
+    1: {
+      panelBg: 'radial-gradient(ellipse at 50% 110%, #7078A6 0%, #1c1840 100%)',
+      rating: 4.8,
+      ratingCount: 214,
+      description: 'Fresh blueberries blended smooth with almond milk, topped with plump whole blueberries, toasted coconut flakes, and a scattering of chia seeds for crunch.',
+      ingredients: ['Blueberries', 'Almond Milk', 'Banana', 'Chia Seeds', 'Coconut Flakes', 'Agave Syrup'],
+      nutrition: { calories: '320 kcal', protein: '6g', carbs: '52g', fat: '9g' }
+    },
+    2: {
+      panelBg: 'radial-gradient(ellipse at 50% 110%, #C94040 0%, #420c0c 100%)',
+      rating: 4.9,
+      ratingCount: 187,
+      description: 'Sun-ripened strawberries puréed with ripe banana and creamy coconut milk, crowned with fresh strawberry slices, banana rounds, and a golden drizzle of raw honey.',
+      ingredients: ['Strawberries', 'Banana', 'Coconut Milk', 'Raw Honey', 'Shredded Coconut', 'Granola'],
+      nutrition: { calories: '345 kcal', protein: '5g', carbs: '61g', fat: '8g' }
+    },
+    3: {
+      panelBg: 'radial-gradient(ellipse at 50% 110%, #B07C40 0%, #2e1907 100%)',
+      rating: 4.7,
+      ratingCount: 162,
+      description: 'Rich cacao and roasted almond butter blended with oat milk, finished with banana coins, crunchy cacao nibs, a dusting of coconut and sliced toasted almonds.',
+      ingredients: ['Cacao Powder', 'Roasted Almonds', 'Banana', 'Oat Milk', 'Cacao Nibs', 'Coconut Flakes'],
+      nutrition: { calories: '390 kcal', protein: '9g', carbs: '48g', fat: '16g' }
+    },
+    4: {
+      panelBg: 'radial-gradient(ellipse at 50% 110%, #8A3878 0%, #250730 100%)',
+      rating: 4.8,
+      ratingCount: 139,
+      description: 'Wild blackberries blended with coconut cream and a hint of vanilla, topped with whole blackberries, toasted pine nuts, chia seeds, and slivered almonds.',
+      ingredients: ['Blackberries', 'Coconut Cream', 'Vanilla', 'Pine Nuts', 'Chia Seeds', 'Almond Slivers'],
+      nutrition: { calories: '358 kcal', protein: '7g', carbs: '46g', fat: '14g' }
+    }
+  };
+
+  // ── Helpers ──────────────────────────────
+  function buildStars(rating) {
+    const full  = Math.floor(rating);
+    const half  = rating - full >= 0.5 ? 1 : 0;
+    const empty = 5 - full - half;
+    let html = '';
+    for (let i = 0; i < full;  i++) html += '<span class="qv-star">★</span>';
+    if (half)                        html += '<span class="qv-star">★</span>';
+    for (let i = 0; i < empty; i++) html += '<span class="qv-star empty">★</span>';
+    return html;
+  }
+
+  function buildNutrition(nut) {
+    return Object.entries(nut).map(([key, val]) => `
+      <div class="qv-nut-item">
+        <div class="qv-nut-value">${val}</div>
+        <div class="qv-nut-label">${key.charAt(0).toUpperCase() + key.slice(1)}</div>
+      </div>
+    `).join('');
+  }
+
+  // ── Open / Close ─────────────────────────
+  let qvCurrentProductId = null;
+
+  function openQuickView(productId) {
+    const base   = products.find(p => p.id === productId);
+    const detail = quickViewData[productId];
+    if (!base || !detail) return;
+
+    qvCurrentProductId = productId;
+
+    // Panel gradient
+    document.getElementById('qvImagePanel').style.setProperty('--qv-panel-bg', detail.panelBg);
+
+    // Clone the card's SVG into the modal image panel
+    const cardIndex  = productId - 1; // cards 0-3 map to ids 1-4
+    const shopCards  = document.querySelectorAll('#shop .bowl-card');
+    const sourceSvg  = shopCards[cardIndex]
+                        ? shopCards[cardIndex].querySelector('.card-bowl-img')
+                        : null;
+    const svgTarget  = document.getElementById('qvBowlSvg');
+    svgTarget.innerHTML = sourceSvg ? sourceSvg.outerHTML : '';
+    if (svgTarget.firstElementChild) {
+      svgTarget.firstElementChild.style.width  = '100%';
+      svgTarget.firstElementChild.style.height = 'auto';
+    }
+
+    // Populate text fields
+    document.getElementById('qvName').textContent    = base.name;
+    document.getElementById('qvFlavour').textContent = base.flavour;
+    document.getElementById('qvPrice').textContent   = '₹' + base.price.toLocaleString('en-IN');
+    document.getElementById('qvDesc').textContent    = detail.description;
+
+    document.getElementById('qvRating').innerHTML =
+      buildStars(detail.rating) +
+      `<span class="qv-rating-count">(${detail.ratingCount})</span>`;
+
+    document.getElementById('qvIngredients').innerHTML =
+      detail.ingredients.map(i => `<span class="qv-ingredient-tag">${i}</span>`).join('');
+
+    document.getElementById('qvNutrition').innerHTML = buildNutrition(detail.nutrition);
+
+    // Show overlay
+    const overlay = document.getElementById('qvOverlay');
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeQuickView() {
+    const overlay = document.getElementById('qvOverlay');
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    qvCurrentProductId = null;
+  }
+
+  // ── Event listeners ───────────────────────
+  document.getElementById('qvClose').addEventListener('click', closeQuickView);
+
+  document.getElementById('qvOverlay').addEventListener('click', (e) => {
+    if (e.target.id === 'qvOverlay') closeQuickView();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeQuickView();
+  });
+
+  // "Add to Cart" inside the Quick View
+  document.getElementById('qvAddToCart').addEventListener('click', () => {
+    if (qvCurrentProductId === null) return;
+    closeQuickView();
+    addToCart(qvCurrentProductId);   // calls existing addToCart() which opens the cart
+  });
+
+  // ── Wire up card clicks (shop cards only) ──
+  // Runs after DOM is ready. Uses event delegation on the card body,
+  // stopping propagation on the inner .card-btn so Order Now still
+  // goes directly to the cart without opening the modal.
+  document.querySelectorAll('#shop .bowl-card').forEach((card, index) => {
+    const productId = index + 1; // 1-based to match products array
+
+    card.addEventListener('click', (e) => {
+      // If the click originated from the "Order Now" button, let that
+      // button's own listener handle it — do not open Quick View.
+      if (e.target.closest('.card-btn')) return;
+      openQuickView(productId);
+    });
+  });
 </script>
 </body>
 </html>
